@@ -46,12 +46,16 @@ class Command(BaseCommand):
         make_option('--flush', metavar="DATA_TYPES", default='',
             help =  "Selectively flush data. Comma separated list of data types."
         ),
+        make_option('--log', metavar="LOG_LEVEL", default=logging.ERROR,
+            help =  "Set log level."
+        ),
     )
 
     def handle(self, *args, **options):
         self.download_cache = {}
         self.options = options
 
+        self.logger.setLevel(self.options['log'])
         self.force = self.options['force']
 
         self.flushes = [e for e in self.options['flush'].split(',') if e]
@@ -132,23 +136,11 @@ class Command(BaseCommand):
         name, ext = filename.rsplit('.', 1)
         if (ext == 'zip'):
             file = zipfile.ZipFile(file).open(name + '.txt', 'r')
-        if file.mode == 'rb':
-            data = (
-                dict(list(zip(settings.files[filekey]['fields'], row.decode('utf-8').split("\t")))) 
-                for row in file if not row.decode('utf-8').startswith('#')
-            )
-        else:
-            data = (
-                dict(list(zip(settings.files[filekey]['fields'], row.decode('utf-8').split("\t"))))
-                for row in file if not row.decode('utf-8').startswith('#')
-            )
-            file = zipfile.ZipFile(file).open(name + '.txt')
-
         data = (
-            dict(list(zip(settings.files[filekey]['fields'], row.split("\t")))) 
-            for row in file if not row.startswith('#')
+            dict(list(zip(settings.files[filekey]['fields'],
+                row.decode('utf-8').split("\t"))))
+            for row in file if not row.decode('utf-8').startswith('#')
         )
-
         return data
 
     def parse(self, data):
