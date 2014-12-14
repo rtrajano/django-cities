@@ -501,11 +501,7 @@ class Command(BaseCommand):
             try:
                 pc.save()
             except Exception as e:
-<<<<<<< HEAD
                 print(("Error: {0}".format(e)))
-=======
-                print(e)
->>>>>>> f64c2af... Basic fixes with 2to3 -wn
 
     def flush_country(self):
         self.logger.info("Flushing country data")
