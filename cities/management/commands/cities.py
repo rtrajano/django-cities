@@ -46,16 +46,12 @@ class Command(BaseCommand):
         make_option('--flush', metavar="DATA_TYPES", default='',
             help =  "Selectively flush data. Comma separated list of data types."
         ),
-        make_option('--log', metavar="LOG_LEVEL", default=logging.ERROR,
-            help =  "Set log level."
-        ),
     )
 
     def handle(self, *args, **options):
         self.download_cache = {}
         self.options = options
 
-        self.logger.setLevel(self.options['log'])
         self.force = self.options['force']
 
         self.flushes = [e for e in self.options['flush'].split(',') if e]
