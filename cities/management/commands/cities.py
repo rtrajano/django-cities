@@ -33,6 +33,7 @@ from ...util import geo_distance
 class Command(BaseCommand):
     app_dir = os.path.normpath(os.path.dirname(os.path.realpath(__file__)) + '/../..')
     data_dir = os.path.join(app_dir, 'data')
+    logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger("cities")
 
     option_list = BaseCommand.option_list + (
